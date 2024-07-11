@@ -36,5 +36,5 @@ https://github.com/kzl/decision-transformer
 
 ## 使用ライブラリ
 
-
-
+- ライブラリ1 (バージョン)
+- ライブラリ2 (バージョン)
