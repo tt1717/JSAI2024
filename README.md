@@ -25,6 +25,7 @@ https://sites.google.com/view/jsai2024-japanese/%E3%83%9B%E3%83%BC%E3%83%A0
    cd リポジトリ名
 
 2. 必要なライブラリをインストールします：
+  ```bash
   pip install -r requirements.txt
 
 ## 起動方法
