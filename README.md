@@ -23,3 +23,18 @@ https://sites.google.com/view/jsai2024-japanese/%E3%83%9B%E3%83%BC%E3%83%A0
    ```bash
    git clone https://github.com/ユーザー名/リポジトリ名.git
    cd リポジトリ名
+
+2. 必要なライブラリをインストールします：
+  pip install -r requirements.txt
+
+## 起動方法
+1. メインスクリプトを実行します：
+   python main.py
+
+## ベースコード
+https://github.com/kzl/decision-transformer
+
+## 使用ライブラリ
+
+
+
