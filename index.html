@@ -170,7 +170,8 @@ function switchLang(){
     <h2 class="lang-jp">概要</h2>
     <h2 class="lang-en" style="display:none;">Abstract</h2>
     <p class="lang-jp">
-        本研究では，Transformerベースのオフライン強化学習のロバスト性を検証する．オフライン強化学習のための状態データにノイズを加えて訓練を行い，ノイズ下訓練での性能を評価する．評価実験では，4種類のAtariゲーム（Breakout，Pong，Qbert，Seaquest）に関して，5つの評価テスト（クリーン，ガウシアン，ショット，インパルス，スペックル）におけるスコアを比較する．実験結果より，通常訓練（クリーン）に対する全てのノイズ評価テストでスコアが低下した．一方，訓練時にノイズ系によるデータ拡張訓練を導入することでスコア向上の傾向が確認された．
+        
+        本研究では，Transformerベースのオフライン強化学習のロバスト性を検証する．オフライン強化学習のための状態データにノイズを加えて訓練を行い，ノイズ下訓練での性能を評価する．評価実験では、４種類のAtariゲーム（Breakout，Pong，Qbert，Seaquest）に関して，5つの評価テスト（クリーン，ガウシアン，ショット，インパルス，スペックル）でのスコアで比較する．実験結果は，通常訓練 (クリーン)に対する全てのノイズ評価テストにおいて，Atariゲームのスコアが低下した．その対策として訓練時にノイズ系によるデータ拡張訓練を導入することで，Atariゲームのスコア向上の傾向が確認された．この結果は，ノイズ評価テストに対する脆弱性とデータ拡張訓練によるロバスト性向上を示している．
     </p>
     <p class="lang-en" style="display:none;">
         This study verifies the robustness of offline reinforcement learning based on Transformers. We train agents on state data with added noise and assess their performance under noisy conditions. In evaluation, scores on five corruption tests (clean, Gaussian, shot, impulse, speckle) are compared across four Atari games (Breakout, Pong, Qbert, Seaquest). Results show a significant drop in scores on all noisy tests relative to clean training, while incorporating noise‑based data augmentation during training improves robustness.
@@ -182,15 +183,15 @@ function switchLang(){
     <h2 class="lang-jp">研究背景</h2>
     <h2 class="lang-en" style="display:none;">Background</h2>
     <ul class="lang-jp">
-        <li>Decision Transformer に対するロバスト性検証は未確認</li>
-        <li>ゲームタスクへ混入可能性のあるノイズ系を対象（ぼかし，天候，デジタル系は除外）</li>
+        <li>Decision Transformerに対するロバスト性検証は確認されていない</li>
+        <li>ゲームタスクへの混入可能性があるノイズ系を対象 (ぼかし，天候，デジタル系はゲームプレイに混入しない)</li>
     </ul>
     <ul class="lang-en" style="display:none;">
         <li>Robustness of Decision Transformers remains unverified</li>
         <li>Focus on noise types likely to appear in game tasks (blur, weather and digital artifacts excluded)</li>
     </ul>
     <p class="lang-jp">
-        Atariゲームにおける深層強化学習では敵対的摂動への脆弱性が報告されている．本研究では，自然環境で想定されるランダムノイズにも注目し，ロバスト性を向上させる手法を検討する．
+        Atariゲームにおける深層強化学習には，敵対的摂動に対する脆弱性が存在する．例えば，敵対的摂動によってエージェントを目標状態に誘導することができたり，敵対的摂動とランダムノイズの両方で方策の性能低下を引き起こすことができる．このような摂動に対してロバスト性を高めることは重要な課題である．敵対的摂動は意図したノイズを付与するが，普遍的破損のような各種ノイズに関しては，意図せずノイズが付与される可能性があり，検証の必要性がある．
     </p>
     <p class="lang-en" style="display:none;">
         Adversarial vulnerabilities have been reported for deep reinforcement learning on Atari games. We therefore examine random noise likely to occur in natural environments and explore methods to enhance robustness.
@@ -205,15 +206,17 @@ function switchLang(){
     <h2 class="lang-jp">提案手法</h2>
     <h2 class="lang-en" style="display:none;">Proposed Method</h2>
     <ol class="lang-jp">
-        <li>通常訓練とデータ拡張訓練（各訓練は約 20 000 試行 ≒ 4 000 × 5 epoch）</li>
-        <li>評価テスト（各テストは 50 試行 ≒ 10 × 5 epoch）<br>※ノイズ比率訓練：評価テストは 25 試行 ≒ 5 × 5 epoch</li>
+        <li>通常訓練とデータ拡張訓練
+            ・各訓練は約20000回試行する (約4000回 × 5epoch)</li>
+        <li>評価テスト
+            ・各評価テストは50回試行する (10回 × 5epoch)<br>※ノイズ比率訓練：評価テストは25回 (5回 × 5epoch)</li>
     </ol>
     <ol class="lang-en" style="display:none;">
         <li>Standard vs. data‑augmented training (≈20,000 episodes ≒ 4,000 × 5 epochs each)</li>
         <li>Evaluation tests (50 episodes ≒ 10 × 5 epochs each)<br>*Noise‑ratio training: 25 episodes ≒ 5 × 5 epochs</li>
     </ol>
     <div style="text-align:center; margin:24px 0;">
-      <img src="images/method.png" alt="提案手法図" style="max-width:100%; height:auto;">
+      <img src="images/method.png" alt="提案手法図" style="max-width:60%; height:auto;">
     </div>
 </section>
 
@@ -223,7 +226,7 @@ function switchLang(){
     <h2 class="lang-en" style="display:none;">Results</h2>
     <h3 class="lang-jp">脆弱性検証（定性評価）</h3>
     <h3 class="lang-en" style="display:none;">Vulnerability Check (Qualitative)</h3>
-    <p class="lang-jp">Clean 以外のノイズ系テストでは，エージェントが学習しきれていない．</p>
+    <p class="lang-jp">Clean以外のノイズ系テストでは，エージェントが学習しきれていない．</p>
     <p class="lang-en" style="display:none;">Agents fail to learn under noise tests other than Clean.</p>
     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:24px 0;">
       <!-- GIFs -->
@@ -247,8 +250,8 @@ function switchLang(){
     <h3 class="lang-jp">脆弱性検証（定量評価）</h3>
     <h3 class="lang-en" style="display:none;">Vulnerability Check (Quantitative)</h3>
     <ul class="lang-jp">
-        <li>通常データ訓練モデルに各種ノイズを付与するとゲームスコアが大幅に低下（ノイズに対して脆弱）</li>
-        <li>スコア分布も大きく悪化</li>
+        <li>通常データで訓練したモデルに対して，テスト時に各種ノイズを付与してプレイすると顕著にゲームスコアが低下する (ノイズに対して脆弱)</li>
+        <li>通常データで訓練したモデルに対して，テスト時に各種ノイズを付与してプレイするとスコア分布が大幅に低下する</li>
     </ul>
     <ul class="lang-en" style="display:none;">
         <li>Adding noise to models trained on clean data drastically lowers game scores, indicating vulnerability</li>
@@ -265,8 +268,8 @@ function switchLang(){
     <h3 class="lang-jp">ロバスト性検証（定性評価）</h3>
     <h3 class="lang-en" style="display:none;">Robustness Check (Qualitative)</h3>
     <ul class="lang-jp">
-        <li>各訓練データセットに対応するテストで良好なスコアを獲得</li>
-        <li>Clean 以外のノイズテストでも学習が確認できる</li>
+        <li>各種訓練データセットに対応するテストの結果</li>
+        <li>Clean以外のノイズ系テストでも，エージェントが学習できている</li>
     </ul>
     <ul class="lang-en" style="display:none;">
         <li>Good scores on tests corresponding to each noisy training dataset</li>
@@ -293,9 +296,9 @@ function switchLang(){
     <h3 class="lang-jp">ロバスト性検証（定量評価）</h3>
     <h3 class="lang-en" style="display:none;">Robustness Check (Quantitative)</h3>
     <ul class="lang-jp">
-        <li>訓練したノイズデータセットに対応するテストが最高スコア（ノイズに対してロバスト）</li>
-        <li>他ゲームタスクでもノイズデータセット訓練でスコア向上傾向</li>
-        <li>通常訓練と比較してスコア分布が全体的に向上</li>
+        <li>各種訓練データセットに対応するテストが最も高いスコアを得られた (ノイズに対してロバスト)</li>
+        <li>※他のゲームタスクではノイズデータセット訓練でスコアが上がる傾向</li>
+        <li>通常データ訓練と比較して，各種ノイズデータセット訓練によってスコア分布が向上している</li>
     </ul>
     <ul class="lang-en" style="display:none;">
         <li>Tests matching the noise‑trained datasets yield the highest scores (robust to noise)</li>
@@ -313,8 +316,8 @@ function switchLang(){
     <h2 class="lang-jp">まとめ</h2>
     <h2 class="lang-en" style="display:none;">Conclusion</h2>
     <ol class="lang-jp">
-        <li>Common Corruption における各種ノイズテストで脆弱性を確認</li>
-        <li>データ拡張訓練によってロバスト性が向上することを実証</li>
+        <li>Common Corruptionにおける各種ノイズ評価テストにて脆弱性が存在することを示した</li>
+        <li>データ拡張訓練により，ロバスト性が向上することを示した</li>
     </ol>
     <ol class="lang-en" style="display:none;">
         <li>Confirmed vulnerabilities under various noise tests in Common Corruption</li>
