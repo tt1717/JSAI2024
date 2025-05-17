@@ -84,6 +84,7 @@
       .btn:hover {
         opacity: 0.85;
       }
+      .btn:focus { outline: none; }
 
       /* Main -------------------------------------------------- */
       main {
@@ -252,14 +253,7 @@
           本研究では，Transformerベースのオフライン強化学習のロバスト性を検証する．オフライン強化学習のための状態データにノイズを加えて訓練を行い，ノイズ下訓練での性能を評価する．評価実験では、４種類のAtariゲーム（Breakout，Pong，Qbert，Seaquest）に関して，5つの評価テスト（クリーン，ガウシアン，ショット，インパルス，スペックル）でのスコアで比較する．実験結果は，通常訓練 (クリーン)に対する全てのノイズ評価テストにおいて，Atariゲームのスコアが低下した．その対策として訓練時にノイズ系によるデータ拡張訓練を導入することで，Atariゲームのスコア向上の傾向が確認された．この結果は，ノイズ評価テストに対する脆弱性とデータ拡張訓練によるロバスト性向上を示している．
         </p>
         <p class="lang-en" style="display: none">
-          This study verifies the robustness of offline reinforcement learning
-          based on Transformers. We train agents on state data with added noise
-          and assess their performance under noisy conditions. In evaluation,
-          scores on five corruption tests (clean, Gaussian, shot, impulse,
-          speckle) are compared across four Atari games (Breakout, Pong, Qbert,
-          Seaquest). Results show a significant drop in scores on all noisy
-          tests relative to clean training, while incorporating noise‑based data
-          augmentation during training improves robustness.
+          In this study, we verify the robustness of offline reinforcement learning based on Transformers. We train with state data for offline RL with added noise and evaluate the performance under noisy training. In the evaluation experiments, we compare the scores in five evaluation tests (clean, Gaussian, shot, impulse, speckle) for four Atari games (Breakout, Pong, Qbert, Seaquest). The results show that the scores of Atari games decrease in all noise evaluation tests compared to normal training (clean). As a countermeasure, it was confirmed that introducing data augmentation training with noise during training tends to improve the scores of Atari games. These results indicate vulnerability to noise evaluation tests and improved robustness through data augmentation training.
         </p>
       </section>
 
@@ -273,7 +267,7 @@
             <ul class="lang-jp">
               <li>Decision Transformer に対するロバスト性検証は未確認</li>
               <li>
-                ゲームタスクへ混入可能性のあるノイズ系を対象（ぼかし，天候，デジタル系は除外）
+                ゲームタスクへ混入可能性のあるノイズ系を対象 (ぼかし，天候，デジタル系はゲームプレイに混入しない)
               </li>
             </ul>
             <ul class="lang-en" style="display: none">
@@ -288,7 +282,7 @@
             </ul>
 
             <p class="lang-jp">
-              Atariゲームにおける深層強化学習では敵対的摂動への脆弱性が報告されている．本研究では，自然環境で想定されるランダムノイズにも注目し，ロバスト性を向上させる手法を検討する．
+                Atariゲームにおける深層強化学習には，敵対的摂動に対する脆弱性が存在する．例えば，敵対的摂動によってエージェントを目標状態に誘導することができたり，敵対的摂動とランダムノイズの両方で方策の性能低下を引き起こすことができる．このような摂動に対してロバスト性を高めることは重要な課題である．敵対的摂動は意図したノイズを付与するが，普遍的破損のような各種ノイズに関しては，意図せずノイズが付与される可能性があり，検証の必要性がある．
             </p>
             <p class="lang-en" style="display: none">
               In deep reinforcement learning for Atari games, vulnerability to
@@ -342,7 +336,7 @@
             <img
               src="images/method.png"
               alt="Proposed Method Figure"
-              style="max-width: 100%; height: auto"
+              style="max-width: 60%; height: auto"
             />
           </div>
         </div>
@@ -398,7 +392,7 @@
           <div class="section-text">
             <ul class="lang-jp">
               <li>
-                通常データ訓練モデルに各種ノイズを付与するとゲームスコアが大幅に低下（ノイズに対して脆弱）
+                通常データで訓練したモデルに対して，テスト時に各種ノイズを付与してプレイすると顕著にゲームスコアが低下する (ノイズに対して脆弱)
               </li>
               <li>スコア分布も大きく悪化</li>
             </ul>
@@ -420,7 +414,7 @@
             <img
               src="images/vulnerable2.png"
               alt="Vulnerability Quantitative 2"
-              style="max-width: 100%; height: auto"
+              style="max-width: 60%; height: auto"
             />
           </div>
         </div>
@@ -477,7 +471,7 @@
         <div class="section-flex">
           <div class="section-text">
             <ul class="lang-jp">
-              <li>訓練したノイズデータセットに対応するテストが最高スコア（ノイズに対してロバスト）</li>
+              <li>各種訓練データセットに対応するテストが最も高いスコアを得られた (ノイズに対してロバスト)</li>
               <li>他ゲームタスクでもノイズデータセット訓練でスコア向上傾向</li>
               <li>通常訓練と比較してスコア分布が全体的に向上</li>
             </ul>
@@ -503,7 +497,7 @@
             <img
               src="images/robustness2.png"
               alt="Robustness Quantitative 2"
-              style="max-width: 100%; height: auto"
+              style="max-width: 60%; height: auto"
             />
           </div>
         </div>
