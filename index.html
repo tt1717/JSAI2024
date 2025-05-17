@@ -24,7 +24,8 @@
         margin: 0;
         font-family: "M PLUS 1p", "M PLUS 1P", "Noto Sans JP", "Segoe UI",
           "Helvetica Neue", Arial, sans-serif;
-        line-height: 1.6;
+        font-size: 1.15rem;
+        line-height: 2;
         color: var(--dark);
       }
 
@@ -52,6 +53,7 @@
         margin: 80px auto 48px;
         text-align: center;
         padding: 0 16px;
+        line-height: 2;
       }
       .hero h2 {
         margin: 0 0 24px;
@@ -84,16 +86,18 @@
       .btn:hover {
         opacity: 0.85;
       }
-      .btn:focus { outline: none; }
+      .btn:focus, .btn:active { outline: none !important; box-shadow: none !important; }
 
       /* Main -------------------------------------------------- */
       main {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 16px 80px;
+        line-height: 2;
       }
       section {
         margin: 64px 0;
+        line-height: 2;
       }
       section h2 {
         margin: 0 0 24px;
@@ -336,7 +340,7 @@
             <img
               src="images/method.png"
               alt="Proposed Method Figure"
-              style="max-width: 60%; height: auto"
+              style="max-width: 100%; height: auto"
             />
           </div>
         </div>
@@ -414,7 +418,7 @@
             <img
               src="images/vulnerable2.png"
               alt="Vulnerability Quantitative 2"
-              style="max-width: 60%; height: auto"
+              style="max-width: 100%; height: auto"
             />
           </div>
         </div>
@@ -486,7 +490,7 @@
               </li>
               <li>The score distribution is generally improved compared to standard training.</li>
             </ul>
-          </div>1200
+          </div>
 
           <div class="section-img">
             <img
@@ -497,7 +501,7 @@
             <img
               src="images/robustness2.png"
               alt="Robustness Quantitative 2"
-              style="max-width: 60%; height: auto"
+              style="max-width: 100%; height: auto"
             />
           </div>
         </div>
