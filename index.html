@@ -1,76 +1,248 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>JSAI2024 JAPANESE</title>
-  <style>
-    body {
-      font-family: 'M PLUS 1p', 'Lato', 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f7f7fa;
-      color: #222;
-      line-height: 1.7;
-    }
-    .header {
-      background: #1f2d6c;
-      color: #fff;
-      padding: 48px 0 24px 0;
-      text-align: center;
-    }
-    .container {
-      max-width: 800px;
-      margin: 32px auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      padding: 32px 24px;
-    }
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 300;
-      margin: 0 0 12px 0;
-    }
-    h2 {
-      font-size: 1.3rem;
-      font-weight: 400;
-      margin: 24px 0 8px 0;
-    }
-    p {
-      font-size: 1.1rem;
-      margin: 12px 0;
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p:400,700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atariゲームに対するTransformerベース強化学習のロバスト性検証</title>
+
+<style>
+:root{
+    --accent:#0b57d0;   /* 見出し・ボタン用の青 */
+    --dark:#1a1a1a;
+    --light:#f7f7f7;
+}
+body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI","Noto Sans JP",sans-serif;
+    line-height:1.6;
+    color:var(--dark);
+}
+header{
+    display:flex;
+    align-items:center;
+    padding:8px 24px;
+    background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.1);
+}
+header img{
+    height:40px;
+    margin-right:8px;
+}
+header h1{
+    font-size:1rem;
+    margin:0;
+    font-weight:600;
+}
+.hero{
+    max-width:900px;
+    margin:80px auto 48px;
+    text-align:center;
+    padding:0 16px;
+}
+.hero h2{
+    font-size:2.5rem;
+    font-weight:600;
+    line-height:1.3;
+    color:var(--accent);
+    margin:0 0 24px;
+}
+.hero p.authors{
+    font-size:1rem;
+    margin:0 0 32px;
+}
+.btn-group{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    flex-wrap:wrap;
+}
+.btn{
+    background:var(--accent);
+    color:#fff;
+    padding:12px 24px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:600;
+    font-size:.9rem;
+    transition:.15s;
+}
+.btn:hover{opacity:.85;}
+main{
+    max-width:900px;
+    margin:0 auto;
+    padding:0 16px 80px;
+}
+section{
+    margin:64px 0;
+}
+section h2{
+    font-size:2rem;
+    color:var(--accent);
+    margin:0 0 24px;
+    border-bottom:1px solid #ddd;
+    padding-bottom:4px;
+}
+section h3{
+    font-size:1.2rem;
+    color:var(--dark);
+    margin:32px 0 16px;
+}
+ul,ol{
+    padding-left:20px;
+}
+.placeholder{
+    width:100%;
+    height:300px;
+    background:#e1e1e1;
+    border:2px dashed #bbb;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#777;
+    margin:24px 0;
+    font-size:1rem;
+}
+footer{
+    text-align:center;
+    font-size:.8rem;
+    color:#666;
+    border-top:1px solid #eee;
+    padding:24px 0;
+    margin-top:64px;
+}
+@media(max-width:600px){
+    .hero h2{font-size:1.8rem;}
+    header h1{font-size:.9rem;}
+}
+</style>
 </head>
+
 <body>
-  <div class="header">
-    <img src="logo.png" alt="JSAI2024 Logo" class="header-logo">
-    <span class="header-title">JSAI2024 JAPANESE</span>
-  </div>
-  <div class="main-title">
-    Atariゲームに対するTransformerベース<br>
-    強化学習のロバスト性検証
-  </div>
-  <div class="authors">
-    高野剛志＊1，計良有志＊2，川本一彦＊2
-  </div>
-  <div class="affiliations">
-    ＊1千葉大学大学院融合理工学府，＊2千葉大学大学院工学研究院
-  </div>
-  <div class="button-row">
-    <a href="#" class="custom-btn">Paper</a>
-    <a href="#" class="custom-btn">Supplement</a>
-    <a href="#" class="custom-btn">Slide</a>
-    <a href="#" class="custom-btn">Poster</a>
-    <a href="#" class="custom-btn">English Ver.</a>
-  </div>
-  <!--
-  <div class="container">
+<!-- ─── ヘッダー ─────────────────────────────────── -->
+<header>
+    <!-- ロゴ画像は適宜差し替えてください -->
+    <img src="placeholder-logo.png" alt="logo">
+    <h1>JSAI2024 JAPANESE</h1>
+</header>
+
+<!-- ─── ヒーローセクション ─────────────────────────── -->
+<div class="hero">
+    <h2>Atariゲームに対する<br>Transformerベース<br>強化学習のロバスト性検証</h2>
+    <p class="authors">
+        髙野剛志 *1，計良有志 *2，川本一彦 *2<br>
+        *1 千葉大学大学院融合理工学府，*2 千葉大学大学院工学研究院
+    </p>
+
+    <div class="btn-group">
+        <a href="#" class="btn">Paper</a>
+        <a href="#" class="btn">Supplement</a>
+        <a href="#" class="btn">Slide</a>
+        <a href="#" class="btn">Poster</a>
+        <a href="#" class="btn">English Ver.</a>
+    </div>
+</div>
+
+<!-- ─── 本文 ─────────────────────────────────────── -->
+<main>
+<!-- 概要 -->
+<section id="abstract">
     <h2>概要</h2>
-    <p>本研究では，Transformerベースのオフライン強化学習のロバスト性を検証する．オフライン強化学習のための状態データにノイズを加えて訓練を行い，ノイズ下訓練での性能を評価する．評価実験では、４種類のAtariゲーム（Breakout，Pong，Qbert，Seaquest）に関して，5つの評価テスト（クリーン，ガウシアン，ショット，インパルス，スペックル）でのスコアで比較する．実験結果は，通常訓練とノイズ下訓練の違いを明らかにするものである．</p>
-  </div>
-  -->
+    <p>
+        本研究では，Transformerベースのオフライン強化学習のロバスト性を検証する．オフライン強化学習のための状態データにノイズを加えて訓練を行い，ノイズ下訓練での性能を評価する．評価実験では，4種類のAtariゲーム（Breakout，Pong，Qbert，Seaquest）に関して，5つの評価テスト（クリーン，ガウシアン，ショット，インパルス，スペックル）におけるスコアを比較する．実験結果より，通常訓練（クリーン）に対する全てのノイズ評価テストでスコアが低下した．一方，訓練時にノイズ系によるデータ拡張訓練を導入することでスコア向上の傾向が確認された．
+    </p>
+</section>
+
+<!-- 研究背景 -->
+<section id="background">
+    <h2>研究背景</h2>
+    <ul>
+        <li>Decision Transformer に対するロバスト性検証は未確認</li>
+        <li>ゲームタスクへ混入可能性のあるノイズ系を対象（ぼかし，天候，デジタル系は除外）</li>
+    </ul>
+    <p>
+        Atariゲームにおける深層強化学習では敵対的摂動への脆弱性が報告されている．本研究では，自然環境で想定されるランダムノイズにも注目し，ロバスト性を向上させる手法を検討する．
+    </p>
+    <div style="text-align:center; margin:24px 0;">
+      <img src="images/background.png" alt="研究背景画像" style="max-width:100%; height:auto;">
+    </div>
+</section>
+
+<!-- 提案手法 -->
+<section id="method">
+    <h2>提案手法</h2>
+    <ol>
+        <li>通常訓練とデータ拡張訓練（各訓練は約 20 000 試行 ≒ 4 000 × 5 epoch）</li>
+        <li>評価テスト（各テストは 50 試行 ≒ 10 × 5 epoch）<br>
+            ※ノイズ比率訓練：評価テストは 25 試行 ≒ 5 × 5 epoch
+        </li>
+    </ol>
+    <div style="text-align:center; margin:24px 0;">
+      <img src="images/method.png" alt="提案手法図" style="max-width:100%; height:auto;">
+    </div>
+</section>
+
+<!-- 実験結果：脆弱性検証 -->
+<section id="results-vulnerability">
+    <h2>実験結果</h2>
+    <h3>脆弱性検証（定性評価）</h3>
+    <p>Clean 以外のノイズ系テストでは，エージェントが学習しきれていない．</p>
+    <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:24px 0;">
+      <div style="text-align:center;">
+        <img src="images/clean.gif" alt="Clean" style="width:120px; max-width:100%;"><br>Clean
+      </div>
+      <div style="text-align:center;">
+        <img src="images/gaus.gif" alt="Gaus" style="width:120px; max-width:100%;"><br>Gaus
+      </div>
+      <div style="text-align:center;">
+        <img src="images/shot.gif" alt="Shot" style="width:120px; max-width:100%;"><br>Shot
+      </div>
+      <div style="text-align:center;">
+        <img src="images/imp.gif" alt="Imp" style="width:120px; max-width:100%;"><br>Imp
+      </div>
+      <div style="text-align:center;">
+        <img src="images/spe.gif" alt="Spe" style="width:120px; max-width:100%;"><br>Spe
+      </div>
+    </div>
+
+    <h3>脆弱性検証（定量評価）</h3>
+    <ul>
+        <li>通常データ訓練モデルに各種ノイズを付与するとゲームスコアが大幅に低下（ノイズに対して脆弱）</li>
+        <li>スコア分布も大きく悪化</li>
+    </ul>
+    <div class="placeholder">［脆弱性 定量 グラフ Placeholder］</div>
+</section>
+
+<!-- 実験結果：ロバスト性検証 -->
+<section id="results-robustness">
+    <h3>ロバスト性検証（定性評価）</h3>
+    <ul>
+        <li>各訓練データセットに対応するテストで良好なスコアを獲得</li>
+        <li>Clean 以外のノイズテストでも学習が確認できる</li>
+    </ul>
+    <div class="placeholder">［ロバスト性 定性 画像 Placeholder］</div>
+
+    <h3>ロバスト性検証（定量評価）</h3>
+    <ul>
+        <li>訓練したノイズデータセットに対応するテストが最高スコア（ノイズに対してロバスト）</li>
+        <li>他ゲームタスクでもノイズデータセット訓練でスコア向上傾向</li>
+        <li>通常訓練と比較してスコア分布が全体的に向上</li>
+    </ul>
+    <div class="placeholder">［ロバスト性 定量 表・グラフ Placeholder］</div>
+</section>
+
+<!-- まとめ -->
+<section id="conclusion">
+    <h2>まとめ</h2>
+    <ol>
+        <li>Common Corruption における各種ノイズテストで脆弱性を確認</li>
+        <li>データ拡張訓練によってロバスト性が向上することを実証</li>
+    </ol>
+</section>
+</main>
+
+<!-- ─── フッター ─────────────────────────────────── -->
+<footer>
+    © 2024 JSAI2024 Atari Transformer RL Robustness Study
+</footer>
 </body>
-</html> 
+</html>
