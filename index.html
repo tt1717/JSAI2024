@@ -115,30 +115,39 @@ footer{
     header h1{font-size:.9rem;}
 }
 </style>
+<script>
+function switchLang() {
+  const jp = document.querySelectorAll('.lang-jp');
+  const en = document.querySelectorAll('.lang-en');
+  jp.forEach(e => e.style.display = e.style.display === 'none' ? '' : 'none');
+  en.forEach(e => e.style.display = e.style.display === 'none' ? '' : 'none');
+}
+</script>
 </head>
 
 <body>
 <!-- ─── ヘッダー ─────────────────────────────────── -->
 <header>
     <!-- ロゴ画像は適宜差し替えてください -->
-    <img src="images/icon.png" alt="logo">
+    <img src="images/icon.jpeg" alt="logo">
     <h1>JSAI2024 JAPANESE</h1>
 </header>
 
 <!-- ─── ヒーローセクション ─────────────────────────── -->
 <div class="hero">
-    <h2>Atariゲームに対する<br>Transformerベース<br>強化学習のロバスト性検証</h2>
+    <h2 class="lang-jp">Atariゲームに対する<br>Transformerベース<br>強化学習のロバスト性検証</h2>
+    <h2 class="lang-en" style="display:none;">Robustness Verification of Transformer-based Reinforcement Learning for Atari Games</h2>
     <p class="authors">
         髙野剛志 *1，計良有志 *2，川本一彦 *2<br>
         *1 千葉大学大学院融合理工学府，*2 千葉大学大学院工学研究院
     </p>
 
     <div class="btn-group">
-        <a href="#" class="btn">Paper</a>
-        <a href="#" class="btn">Supplement</a>
-        <a href="#" class="btn">Slide</a>
-        <a href="#" class="btn">Poster</a>
-        <a href="#" class="btn">English Ver.</a>
+        <a href="materials/paper.pdf" class="btn" target="_blank">Paper</a>
+        <a href="materials/supplement.pdf" class="btn" target="_blank">Supplement</a>
+        <a href="materials/slide.pdf" class="btn" target="_blank">Slide</a>
+        <a href="materials/poster.pdf" class="btn" target="_blank">Poster</a>
+        <button class="btn" onclick="switchLang()">English Ver.</button>
     </div>
 </div>
 
@@ -146,9 +155,13 @@ footer{
 <main>
 <!-- 概要 -->
 <section id="abstract">
-    <h2>概要</h2>
-    <p>
+    <h2 class="lang-jp">概要</h2>
+    <h2 class="lang-en" style="display:none;">Abstract</h2>
+    <p class="lang-jp">
         本研究では，Transformerベースのオフライン強化学習のロバスト性を検証する．オフライン強化学習のための状態データにノイズを加えて訓練を行い，ノイズ下訓練での性能を評価する．評価実験では，4種類のAtariゲーム（Breakout，Pong，Qbert，Seaquest）に関して，5つの評価テスト（クリーン，ガウシアン，ショット，インパルス，スペックル）におけるスコアを比較する．実験結果より，通常訓練（クリーン）に対する全てのノイズ評価テストでスコアが低下した．一方，訓練時にノイズ系によるデータ拡張訓練を導入することでスコア向上の傾向が確認された．
+    </p>
+    <p class="lang-en" style="display:none;">
+        In this study, we verify the robustness of offline reinforcement learning based on Transformers. We train with state data for offline RL with added noise and evaluate performance under noisy training. In the evaluation experiments, we compare scores in five evaluation tests (clean, Gaussian, shot, impulse, speckle) for four Atari games (Breakout, Pong, Qbert, Seaquest). The results show that scores decrease in all noise evaluation tests compared to normal training (clean). On the other hand, introducing data augmentation training with noise during training tends to improve scores.
     </p>
 </section>
 
@@ -177,7 +190,7 @@ footer{
         </li>
     </ol>
     <div style="text-align:center; margin:24px 0;">
-      <img src="images/method.pdf" alt="提案手法図" style="max-width:100%; height:auto;">
+      <iframe src="images/method.pdf" style="width:100%; min-height:600px; border:none;"></iframe>
     </div>
 </section>
 
