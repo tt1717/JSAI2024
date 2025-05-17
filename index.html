@@ -1,334 +1,555 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Atariゲームに対するTransformerベース強化学習のロバスト性検証</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atariゲームに対するTransformerベース強化学習のロバスト性検証</title>
 
-<style>
-:root{
-    --accent:#0b57d0;   /* 見出し・ボタン用の青 */
-    --dark:#1a1a1a;
-    --light:#f7f7f7;
-}
-body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Segoe UI","Noto Sans JP",sans-serif;
-    line-height:1.6;
-    color:var(--dark);
-}
-header{
-    display:flex;
-    align-items:center;
-    padding:8px 24px;
-    background:#fff;
-    box-shadow:0 1px 3px rgba(0,0,0,.1);
-}
-header img{
-    height:40px;
-    margin-right:8px;
-}
-header h1{
-    font-size:1rem;
-    margin:0;
-    font-weight:600;
-}
-.hero{
-    max-width:900px;
-    margin:80px auto 48px;
-    text-align:center;
-    padding:0 16px;
-}
-.hero h2{
-    font-size:2.5rem;
-    font-weight:600;
-    line-height:1.3;
-    color:var(--accent);
-    margin:0 0 24px;
-}
-.hero p.authors{
-    font-size:1rem;
-    margin:0 0 32px;
-}
-.btn-group{
-    display:flex;
-    justify-content:center;
-    gap:16px;
-    flex-wrap:wrap;
-}
-.btn{
-    background:var(--accent);
-    color:#fff;
-    padding:12px 24px;
-    border:none;          /* ↙ 黒枠を除去 */
-    outline:none;         /* ↙ フォーカス時の枠も除去 */
-    border-radius:8px;
-    text-decoration:none;
-    font-weight:600;
-    font-size:.9rem;
-    transition:.15s;
-    cursor:pointer;
-}
-.btn:hover{opacity:.85;}
-.btn:focus{outline:none;}
-main{
-    max-width:900px;
-    margin:0 auto;
-    padding:0 16px 80px;
-}
-section{
-    margin:64px 0;
-}
-section h2{
-    font-size:2rem;
-    color:var(--accent);
-    margin:0 0 24px;
-    border-bottom:1px solid #ddd;
-    padding-bottom:4px;
-}
-section h3{
-    font-size:1.2rem;
-    color:var(--dark);
-    margin:32px 0 16px;
-}
-ul,ol{
-    padding-left:20px;
-}
-.placeholder{
-    width:100%;
-    height:300px;
-    background:#e1e1e1;
-    border:2px dashed #bbb;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#777;
-    margin:24px 0;
-    font-size:1rem;
-}
-footer{
-    text-align:center;
-    font-size:.8rem;
-    color:#666;
-    border-top:1px solid #eee;
-    padding:24px 0;
-    margin-top:64px;
-}
-@media(max-width:600px){
-    .hero h2{font-size:1.8rem;}
-    header h1{font-size:.9rem;}
-}
-</style>
-<script>
-let currentLang = 'jp';
-function switchLang(){
-  currentLang = (currentLang === 'jp') ? 'en' : 'jp';
-  document.querySelectorAll('.lang-jp').forEach(el => el.style.display = (currentLang === 'jp') ? '' : 'none');
-  document.querySelectorAll('.lang-en').forEach(el => el.style.display = (currentLang === 'jp') ? 'none' : '');
-  const btn = document.getElementById('langToggle');
-  btn.textContent = (currentLang === 'jp') ? 'English' : 'Japanese';
-}
-</script>
-</head>
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
 
-<body>
-<!-- ─── ヘッダー ─────────────────────────────────── -->
-<header>
-    <!-- ロゴ画像は適宜差し替えてください -->
-    <img src="images/icon.jpeg" alt="logo">
-    <h1>JSAI2024</h1>
-</header>
+    <!-- ─── Styles ──────────────────────────────────────────── -->
+    <style>
+      :root {
+        --accent: #0b57d0;
+        --dark: #1a1a1a;
+        --light: #f7f7f7;
+      }
 
-<!-- ─── ヒーローセクション ─────────────────────────── -->
-<div class="hero">
-    <h2 class="lang-jp">Atariゲームに対するTransformerベース<br>強化学習のロバスト性検証</h2>
-    <h2 class="lang-en" style="display:none;">Robustness Verification of Transformer-based Reinforcement Learning for Atari Games</h2>
+      /* Base -------------------------------------------------- */
+      body {
+        margin: 0;
+        font-family: "M PLUS 1p", "M PLUS 1P", "Noto Sans JP", "Segoe UI",
+          "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        color: var(--dark);
+      }
 
-    <!-- 著者 -->
-    <p class="authors lang-jp">
-        髙野剛志 *1，計良有志 *2，川本一彦 *2<br>
+      /* Header ------------------------------------------------ */
+      header {
+        display: flex;
+        align-items: center;
+        padding: 8px 24px;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      header img {
+        height: 40px;
+        margin-right: 8px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      /* Hero -------------------------------------------------- */
+      .hero {
+        max-width: 900px;
+        margin: 80px auto 48px;
+        text-align: center;
+        padding: 0 16px;
+      }
+      .hero h2 {
+        margin: 0 0 24px;
+        font-size: 2.5rem;
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--accent);
+      }
+      .hero p.authors {
+        margin: 0 0 32px;
+        font-size: 1rem;
+      }
+      .btn-group {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 24px;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: opacity 0.15s;
+      }
+      .btn:hover {
+        opacity: 0.85;
+      }
+
+      /* Main -------------------------------------------------- */
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 16px 80px;
+      }
+      section {
+        margin: 64px 0;
+      }
+      section h2 {
+        margin: 0 0 24px;
+        font-size: 2rem;
+        color: var(--accent);
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 4px;
+      }
+      section h3 {
+        margin: 32px 0 16px;
+        font-size: 1.2rem;
+        color: var(--dark);
+      }
+      ul,
+      ol {
+        padding-left: 20px;
+      }
+
+      /* Placeholders ----------------------------------------- */
+      .placeholder {
+        width: 100%;
+        height: 300px;
+        margin: 24px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: #777;
+        background: #e1e1e1;
+        border: 2px dashed #bbb;
+      }
+
+      /* Layout helpers --------------------------------------- */
+      .section-flex {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 32px;
+        margin: 32px 0;
+      }
+      .section-text {
+        flex: 1 1 320px;
+        min-width: 260px;
+      }
+      .section-img {
+        flex: 1 1 320px;
+        min-width: 260px;
+        text-align: right;
+      }
+
+      .gifs-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 32px;
+        margin: 24px 0;
+      }
+      .gifs-row .gif-col {
+        text-align: center;
+      }
+      .gifs-row img {
+        width: 160px;
+        max-width: 100%;
+      }
+
+      /* Footer ------------------------------------------------ */
+      footer {
+        margin-top: 64px;
+        padding: 24px 0;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #666;
+        border-top: 1px solid #eee;
+      }
+
+      /* Responsive ------------------------------------------ */
+      @media (max-width: 600px) {
+        .hero h2 {
+          font-size: 1.8rem;
+        }
+        header h1 {
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+
+    <!-- ─── Scripts ─────────────────────────────────────────── -->
+    <script>
+      let currentLang = "jp";
+      function switchLang() {
+        currentLang = currentLang === "jp" ? "en" : "jp";
+
+        document.querySelectorAll(".lang-jp").forEach((el) => {
+          el.style.display = currentLang === "jp" ? "" : "none";
+        });
+        document.querySelectorAll(".lang-en").forEach((el) => {
+          el.style.display = currentLang === "jp" ? "none" : "";
+        });
+
+        const btn = document.getElementById("langToggle");
+        btn.textContent = currentLang === "jp" ? "English" : "Japanese";
+      }
+    </script>
+  </head>
+
+  <body>
+    <!-- ─── Header ─────────────────────────────────────────── -->
+    <header>
+      <!-- Replace logo as needed -->
+      <img src="images/icon.jpeg" alt="logo" />
+      <h1>JSAI2024</h1>
+    </header>
+
+    <!-- ─── Hero Section ───────────────────────────────────── -->
+    <div class="hero">
+      <h2 class="lang-jp">
+        Atariゲームに対するTransformerベース<br />強化学習のロバスト性検証
+      </h2>
+      <h2 class="lang-en" style="display: none">
+        Robustness Verification of Transformer-based Reinforcement Learning for
+        Atari Games
+      </h2>
+
+      <!-- Authors -------------------------------------------- -->
+      <p class="authors lang-jp">
+        髙野剛志 *1，計良有志 *2，川本一彦 *2<br />
         *1 千葉大学大学院融合理工学府，*2 千葉大学大学院工学研究院
-    </p>
-    <p class="authors lang-en" style="display:none;">
-        Tsuyoshi Takano*1, Hiroshi Kera*2, Kazuhiko Kawamoto*2<br>
-        *1 Graduate School of Science and Engineering, Chiba University, *2 Graduate School of Engineering, Chiba University
-    </p>
+      </p>
+      <p class="authors lang-en" style="display: none">
+        Tsuyoshi Takano*1, Hiroshi Kera*2, Kazuhiko Kawamoto*2<br />
+        *1 Graduate School of Science and Engineering, Chiba University, *2
+        Graduate School of Engineering, Chiba University
+      </p>
 
-    <div class="btn-group">
+      <!-- Buttons -------------------------------------------- -->
+      <div class="btn-group">
         <a href="materials/paper.pdf" class="btn" target="_blank">Paper</a>
-        <a href="materials/supplement.pdf" class="btn" target="_blank">Supplement</a>
+        <a href="materials/supplement.pdf" class="btn" target="_blank"
+          >Supplement</a
+        >
         <a href="materials/slide.pdf" class="btn" target="_blank">Slide</a>
         <a href="materials/poster.pdf" class="btn" target="_blank">Poster</a>
-        <button id="langToggle" class="btn" onclick="switchLang()">English</button>
-    </div>
-</div>
-
-<!-- ─── 本文 ─────────────────────────────────────── -->
-<main>
-<!-- 概要 -->
-<section id="abstract">
-    <h2 class="lang-jp">概要</h2>
-    <h2 class="lang-en" style="display:none;">Abstract</h2>
-    <p class="lang-jp">
-        
-        本研究では，Transformerベースのオフライン強化学習のロバスト性を検証する．オフライン強化学習のための状態データにノイズを加えて訓練を行い，ノイズ下訓練での性能を評価する．評価実験では、４種類のAtariゲーム（Breakout，Pong，Qbert，Seaquest）に関して，5つの評価テスト（クリーン，ガウシアン，ショット，インパルス，スペックル）でのスコアで比較する．実験結果は，通常訓練 (クリーン)に対する全てのノイズ評価テストにおいて，Atariゲームのスコアが低下した．その対策として訓練時にノイズ系によるデータ拡張訓練を導入することで，Atariゲームのスコア向上の傾向が確認された．この結果は，ノイズ評価テストに対する脆弱性とデータ拡張訓練によるロバスト性向上を示している．
-    </p>
-    <p class="lang-en" style="display:none;">
-        This study verifies the robustness of offline reinforcement learning based on Transformers. We train agents on state data with added noise and assess their performance under noisy conditions. In evaluation, scores on five corruption tests (clean, Gaussian, shot, impulse, speckle) are compared across four Atari games (Breakout, Pong, Qbert, Seaquest). Results show a significant drop in scores on all noisy tests relative to clean training, while incorporating noise‑based data augmentation during training improves robustness.
-    </p>
-</section>
-
-<!-- 研究背景 -->
-<section id="background">
-    <h2 class="lang-jp">研究背景</h2>
-    <h2 class="lang-en" style="display:none;">Background</h2>
-    <ul class="lang-jp">
-        <li>Decision Transformerに対するロバスト性検証は確認されていない</li>
-        <li>ゲームタスクへの混入可能性があるノイズ系を対象 (ぼかし，天候，デジタル系はゲームプレイに混入しない)</li>
-    </ul>
-    <ul class="lang-en" style="display:none;">
-        <li>Robustness of Decision Transformers remains unverified</li>
-        <li>Focus on noise types likely to appear in game tasks (blur, weather and digital artifacts excluded)</li>
-    </ul>
-    <p class="lang-jp">
-        Atariゲームにおける深層強化学習には，敵対的摂動に対する脆弱性が存在する．例えば，敵対的摂動によってエージェントを目標状態に誘導することができたり，敵対的摂動とランダムノイズの両方で方策の性能低下を引き起こすことができる．このような摂動に対してロバスト性を高めることは重要な課題である．敵対的摂動は意図したノイズを付与するが，普遍的破損のような各種ノイズに関しては，意図せずノイズが付与される可能性があり，検証の必要性がある．
-    </p>
-    <p class="lang-en" style="display:none;">
-        Adversarial vulnerabilities have been reported for deep reinforcement learning on Atari games. We therefore examine random noise likely to occur in natural environments and explore methods to enhance robustness.
-    </p>
-    <div style="text-align:center; margin:24px 0;">
-      <img src="images/background.png" alt="背景図" style="max-width:100%; height:auto;">
-    </div>
-</section>
-
-<!-- 提案手法 -->
-<section id="method">
-    <h2 class="lang-jp">提案手法</h2>
-    <h2 class="lang-en" style="display:none;">Proposed Method</h2>
-    <ol class="lang-jp">
-        <li>通常訓練とデータ拡張訓練
-            ・各訓練は約20000回試行する (約4000回 × 5epoch)</li>
-        <li>評価テスト
-            ・各評価テストは50回試行する (10回 × 5epoch)<br>※ノイズ比率訓練：評価テストは25回 (5回 × 5epoch)</li>
-    </ol>
-    <ol class="lang-en" style="display:none;">
-        <li>Standard vs. data‑augmented training (≈20,000 episodes ≒ 4,000 × 5 epochs each)</li>
-        <li>Evaluation tests (50 episodes ≒ 10 × 5 epochs each)<br>*Noise‑ratio training: 25 episodes ≒ 5 × 5 epochs</li>
-    </ol>
-    <div style="text-align:center; margin:24px 0;">
-      <img src="images/method.png" alt="提案手法図" style="max-width:60%; height:auto;">
-    </div>
-</section>
-
-<!-- 実験結果：脆弱性検証 -->
-<section id="results-vulnerability">
-    <h2 class="lang-jp">実験結果</h2>
-    <h2 class="lang-en" style="display:none;">Results</h2>
-    <h3 class="lang-jp">脆弱性検証（定性評価）</h3>
-    <h3 class="lang-en" style="display:none;">Vulnerability Check (Qualitative)</h3>
-    <p class="lang-jp">Clean以外のノイズ系テストでは，エージェントが学習しきれていない．</p>
-    <p class="lang-en" style="display:none;">Agents fail to learn under noise tests other than Clean.</p>
-    <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:24px 0;">
-      <!-- GIFs -->
-      <div style="text-align:center;">
-        <img src="images/clean_clean.gif" alt="Clean" style="width:120px; max-width:100%;"><br>Clean
-      </div>
-      <div style="text-align:center;">
-        <img src="images/clean_gaus.gif" alt="Gaussian" style="width:120px; max-width:100%;"><br>Gaus
-      </div>
-      <div style="text-align:center;">
-        <img src="images/clean_shot.gif" alt="Shot" style="width:120px; max-width:100%;"><br>Shot
-      </div>
-      <div style="text-align:center;">
-        <img src="images/clean_imp.gif" alt="Impulse" style="width:120px; max-width:100%;"><br>Imp
-      </div>
-      <div style="text-align:center;">
-        <img src="images/clean_spe.gif" alt="Speckle" style="width:120px; max-width:100%;"><br>Spe
+        <button id="langToggle" class="btn" onclick="switchLang()">
+          English
+        </button>
       </div>
     </div>
 
-    <h3 class="lang-jp">脆弱性検証（定量評価）</h3>
-    <h3 class="lang-en" style="display:none;">Vulnerability Check (Quantitative)</h3>
-    <ul class="lang-jp">
-        <li>通常データで訓練したモデルに対して，テスト時に各種ノイズを付与してプレイすると顕著にゲームスコアが低下する (ノイズに対して脆弱)</li>
-        <li>通常データで訓練したモデルに対して，テスト時に各種ノイズを付与してプレイするとスコア分布が大幅に低下する</li>
-    </ul>
-    <ul class="lang-en" style="display:none;">
-        <li>Adding noise to models trained on clean data drastically lowers game scores, indicating vulnerability</li>
-        <li>Score distributions deteriorate significantly</li>
-    </ul>
-    <div style="display:flex; flex-direction:column; align-items:center; gap:16px; margin:24px 0;">
-      <img src="images/vulnerable.png" alt="Quantitative 1" style="max-width:90%; height:auto;">
-      <img src="images/vulnerable2.png" alt="Quantitative 2" style="max-width:90%; height:auto;">
-    </div>
-</section>
+    <!-- ─── Main Content ───────────────────────────────────── -->
+    <main>
+      <!-- Abstract ------------------------------------------- -->
+      <section id="abstract">
+        <h2 class="lang-jp">概要</h2>
+        <h2 class="lang-en" style="display: none">Abstract</h2>
 
-<!-- 実験結果：ロバスト性検証 -->
-<section id="results-robustness">
-    <h3 class="lang-jp">ロバスト性検証（定性評価）</h3>
-    <h3 class="lang-en" style="display:none;">Robustness Check (Qualitative)</h3>
-    <ul class="lang-jp">
-        <li>各種訓練データセットに対応するテストの結果</li>
-        <li>Clean以外のノイズ系テストでも，エージェントが学習できている</li>
-    </ul>
-    <ul class="lang-en" style="display:none;">
-        <li>Good scores on tests corresponding to each noisy training dataset</li>
-        <li>Learning confirmed even under noisy tests other than Clean</li>
-    </ul>
-    <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:24px 0;">
-      <div style="text-align:center;">
-        <img src="images/clean_clean.gif" alt="Clean" style="width:120px; max-width:100%;"><br>Clean
-      </div>
-      <div style="text-align:center;">
-        <img src="images/gaus100_gaus.gif" alt="Gaussian" style="width:120px; max-width:100%;"><br>Gaus
-      </div>
-      <div style="text-align:center;">
-        <img src="images/shot100_shot.gif" alt="Shot" style="width:120px; max-width:100%;"><br>Shot
-      </div>
-      <div style="text-align:center;">
-        <img src="images/imp100_imp.gif" alt="Impulse" style="width:120px; max-width:100%;"><br>Imp
-      </div>
-      <div style="text-align:center;">
-        <img src="images/spe100_spe.gif" alt="Speckle" style="width:120px; max-width:100%;"><br>Spe
-      </div>
-    </div>
+        <p class="lang-jp">
+          本研究では，Transformerベースのオフライン強化学習のロバスト性を検証する．オフライン強化学習のための状態データにノイズを加えて訓練を行い，ノイズ下訓練での性能を評価する．評価実験では、４種類のAtariゲーム（Breakout，Pong，Qbert，Seaquest）に関して，5つの評価テスト（クリーン，ガウシアン，ショット，インパルス，スペックル）でのスコアで比較する．実験結果は，通常訓練 (クリーン)に対する全てのノイズ評価テストにおいて，Atariゲームのスコアが低下した．その対策として訓練時にノイズ系によるデータ拡張訓練を導入することで，Atariゲームのスコア向上の傾向が確認された．この結果は，ノイズ評価テストに対する脆弱性とデータ拡張訓練によるロバスト性向上を示している．
+        </p>
+        <p class="lang-en" style="display: none">
+          This study verifies the robustness of offline reinforcement learning
+          based on Transformers. We train agents on state data with added noise
+          and assess their performance under noisy conditions. In evaluation,
+          scores on five corruption tests (clean, Gaussian, shot, impulse,
+          speckle) are compared across four Atari games (Breakout, Pong, Qbert,
+          Seaquest). Results show a significant drop in scores on all noisy
+          tests relative to clean training, while incorporating noise‑based data
+          augmentation during training improves robustness.
+        </p>
+      </section>
 
-    <h3 class="lang-jp">ロバスト性検証（定量評価）</h3>
-    <h3 class="lang-en" style="display:none;">Robustness Check (Quantitative)</h3>
-    <ul class="lang-jp">
-        <li>各種訓練データセットに対応するテストが最も高いスコアを得られた (ノイズに対してロバスト)</li>
-        <li>※他のゲームタスクではノイズデータセット訓練でスコアが上がる傾向</li>
-        <li>通常データ訓練と比較して，各種ノイズデータセット訓練によってスコア分布が向上している</li>
-    </ul>
-    <ul class="lang-en" style="display:none;">
-        <li>Tests matching the noise‑trained datasets yield the highest scores (robust to noise)</li>
-        <li>Score improvements observed on other game tasks as well</li>
-        <li>Overall score distributions improve over standard training</li>
-    </ul>
-    <div style="display:flex; flex-direction:column; align-items:center; gap:16px; margin:24px 0;">
-      <img src="images/robustness.png" alt="Robustness 1" style="max-width:90%; height:auto;">
-      <img src="images/robustness2.png" alt="Robustness 2" style="max-width:90%; height:auto;">
-    </div>
-</section>
+      <!-- Background ----------------------------------------- -->
+      <section id="background">
+        <div class="section-flex">
+          <div class="section-text">
+            <h2 class="lang-jp">研究背景</h2>
+            <h2 class="lang-en" style="display: none">Background</h2>
 
-<!-- まとめ -->
-<section id="conclusion">
-    <h2 class="lang-jp">まとめ</h2>
-    <h2 class="lang-en" style="display:none;">Conclusion</h2>
-    <ol class="lang-jp">
-        <li>Common Corruptionにおける各種ノイズ評価テストにて脆弱性が存在することを示した</li>
-        <li>データ拡張訓練により，ロバスト性が向上することを示した</li>
-    </ol>
-    <ol class="lang-en" style="display:none;">
-        <li>Confirmed vulnerabilities under various noise tests in Common Corruption</li>
-        <li>Demonstrated robustness improvements via noise‑based data augmentation</li>
-    </ol>
-</section>
-</main>
+            <ul class="lang-jp">
+              <li>Decision Transformer に対するロバスト性検証は未確認</li>
+              <li>
+                ゲームタスクへ混入可能性のあるノイズ系を対象（ぼかし，天候，デジタル系は除外）
+              </li>
+            </ul>
+            <ul class="lang-en" style="display: none">
+              <li>
+                Robustness verification for Decision Transformer has not been
+                conducted.
+              </li>
+              <li>
+                We focus on noise types that can be mixed into game tasks
+                (excluding blur, weather, and digital types).
+              </li>
+            </ul>
 
-<!-- ─── フッター ─────────────────────────────────── -->
-<footer>
-    © 2024 JSAI2024 Atari Transformer RL Robustness Study
-</footer>
-</body>
+            <p class="lang-jp">
+              Atariゲームにおける深層強化学習では敵対的摂動への脆弱性が報告されている．本研究では，自然環境で想定されるランダムノイズにも注目し，ロバスト性を向上させる手法を検討する．
+            </p>
+            <p class="lang-en" style="display: none">
+              In deep reinforcement learning for Atari games, vulnerability to
+              adversarial perturbations has been reported. In this study, we
+              also focus on random noise expected in natural environments and
+              investigate methods to improve robustness.
+            </p>
+          </div>
+
+          <div class="section-img">
+            <img
+              src="images/background.png"
+              alt="研究背景画像"
+              style="max-width: 100%; height: auto"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Proposed Method ------------------------------------ -->
+      <section id="method">
+        <div class="section-flex">
+          <div class="section-text">
+            <h2 class="lang-jp">提案手法</h2>
+            <h2 class="lang-en" style="display: none">Proposed Method</h2>
+
+            <ol class="lang-jp">
+              <li>
+                通常訓練とデータ拡張訓練（各訓練は約 20,000 試行 ≒ 4,000 × 5
+                epoch）
+              </li>
+              <li>
+                評価テスト（各テストは 50 試行 ≒ 10 × 5 epoch）<br />※ノイズ比率訓練：評価テストは 25
+                試行 ≒ 5 × 5 epoch
+              </li>
+            </ol>
+            <ol class="lang-en" style="display: none">
+              <li>
+                Standard training and data augmentation training (each training:
+                ~20,000 trials ≒ 4,000 × 5 epochs)
+              </li>
+              <li>
+                Evaluation tests (each test: 50 trials ≒ 10 × 5 epochs)<br />*For
+                noise ratio training: evaluation test is 25 trials ≒ 5 × 5
+                epochs
+              </li>
+            </ol>
+          </div>
+
+          <div class="section-img">
+            <img
+              src="images/method.png"
+              alt="Proposed Method Figure"
+              style="max-width: 100%; height: auto"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Results : Vulnerability ----------------------------- -->
+      <section id="results-vulnerability">
+        <h2 class="lang-jp">実験結果</h2>
+        <h2 class="lang-en" style="display: none">Results</h2>
+
+        <h3 class="lang-jp">脆弱性検証（定性評価）</h3>
+        <h3 class="lang-en" style="display: none">Vulnerability Check (Qualitative)</h3>
+
+        <p class="lang-jp">Clean以外のノイズ系テストでは，エージェントが学習しきれていない．</p>
+        <p class="lang-en" style="display: none">Agents fail to learn under noise tests other than Clean.</p>
+
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 24px 0;
+          "
+        >
+          <!-- GIFs -->
+          <div style="text-align: center">
+            <img src="images/clean_clean.gif" alt="Clean" style="width: 120px; max-width: 100%" /><br />
+            Clean
+          </div>
+          <div style="text-align: center">
+            <img src="images/clean_gaus.gif" alt="Gaussian" style="width: 120px; max-width: 100%" /><br />
+            Gaus
+          </div>
+          <div style="text-align: center">
+            <img src="images/clean_shot.gif" alt="Shot" style="width: 120px; max-width: 100%" /><br />
+            Shot
+          </div>
+          <div style="text-align: center">
+            <img src="images/clean_imp.gif" alt="Impulse" style="width: 120px; max-width: 100%" /><br />
+            Imp
+          </div>
+          <div style="text-align: center">
+            <img src="images/clean_spe.gif" alt="Speckle" style="width: 120px; max-width: 100%" /><br />
+            Spe
+          </div>
+        </div>
+
+        <h3 class="lang-jp">脆弱性検証（定量評価）</h3>
+        <h3 class="lang-en" style="display: none">Vulnerability Evaluation (Quantitative)</h3>
+
+        <div class="section-flex">
+          <div class="section-text">
+            <ul class="lang-jp">
+              <li>
+                通常データ訓練モデルに各種ノイズを付与するとゲームスコアが大幅に低下（ノイズに対して脆弱）
+              </li>
+              <li>スコア分布も大きく悪化</li>
+            </ul>
+            <ul class="lang-en" style="display: none">
+              <li>
+                When various noises are added to the model trained on normal
+                data, the game score drops significantly (vulnerable to noise).
+              </li>
+              <li>The score distribution also deteriorates greatly.</li>
+            </ul>
+          </div>
+
+          <div class="section-img">
+            <img
+              src="images/vulnerable.png"
+              alt="Vulnerability Quantitative 1"
+              style="max-width: 100%; height: auto; margin-bottom: 16px"
+            />
+            <img
+              src="images/vulnerable2.png"
+              alt="Vulnerability Quantitative 2"
+              style="max-width: 100%; height: auto"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Results : Robustness ------------------------------- -->
+      <section id="results-robustness">
+        <h3 class="lang-jp">ロバスト性検証（定性評価）</h3>
+        <h3 class="lang-en" style="display: none">Robustness Check (Qualitative)</h3>
+
+        <ul class="lang-jp">
+          <li>各種訓練データセットに対応するテストの結果</li>
+          <li>Clean以外のノイズ系テストでも，エージェントが学習できている</li>
+        </ul>
+        <ul class="lang-en" style="display: none">
+          <li>Good scores on tests corresponding to each noisy training dataset</li>
+          <li>Learning confirmed even under noisy tests other than Clean</li>
+        </ul>
+
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 24px 0;
+          "
+        >
+          <div style="text-align: center">
+            <img src="images/clean_clean.gif" alt="Clean" style="width: 120px; max-width: 100%" /><br />
+            Clean
+          </div>
+          <div style="text-align: center">
+            <img src="images/gaus100_gaus.gif" alt="Gaussian" style="width: 120px; max-width: 100%" /><br />
+            Gaus
+          </div>
+          <div style="text-align: center">
+            <img src="images/shot100_shot.gif" alt="Shot" style="width: 120px; max-width: 100%" /><br />
+            Shot
+          </div>
+          <div style="text-align: center">
+            <img src="images/imp100_imp.gif" alt="Impulse" style="width: 120px; max-width: 100%" /><br />
+            Imp
+          </div>
+          <div style="text-align: center">
+            <img src="images/spe100_spe.gif" alt="Speckle" style="width: 120px; max-width: 100%" /><br />
+            Spe
+          </div>
+        </div>
+
+        <h3 class="lang-jp">ロバスト性検証（定量評価）</h3>
+        <h3 class="lang-en" style="display: none">Robustness Evaluation (Quantitative)</h3>
+
+        <div class="section-flex">
+          <div class="section-text">
+            <ul class="lang-jp">
+              <li>訓練したノイズデータセットに対応するテストが最高スコア（ノイズに対してロバスト）</li>
+              <li>他ゲームタスクでもノイズデータセット訓練でスコア向上傾向</li>
+              <li>通常訓練と比較してスコア分布が全体的に向上</li>
+            </ul>
+            <ul class="lang-en" style="display: none">
+              <li>
+                The test corresponding to the trained noise dataset achieves the
+                highest score (robust to noise).
+              </li>
+              <li>
+                Score improvement tendency is also observed in other game tasks
+                with noise dataset training.
+              </li>
+              <li>The score distribution is generally improved compared to standard training.</li>
+            </ul>
+          </div>
+
+          <div class="section-img">
+            <img
+              src="images/robustness.png"
+              alt="Robustness Quantitative 1"
+              style="max-width: 100%; height: auto; margin-bottom: 16px"
+            />
+            <img
+              src="images/robustness2.png"
+              alt="Robustness Quantitative 2"
+              style="max-width: 100%; height: auto"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- GIFs Row ------------------------------------------- -->
+      <div class="gifs-row">
+        <div class="gif-col">
+          <img src="images/clean_clean.gif" alt="Clean" /><br />
+          Clean
+        </div>
+        <div class="gif-col">
+          <img src="images/gaus100_gaus.gif" alt="Gaus" /><br />
+          Gaus
+        </div>
+        <div class="gif-col">
+          <img src="images/shot100_shot.gif" alt="Shot" /><br />
+          Shot
+        </div>
+        <div class="gif-col">
+          <img src="images/imp100_imp.gif" alt="Imp" /><br />
+          Imp
+        </div>
+        <div class="gif-col">
+          <img src="images/spe100_spe.gif" alt="Spe" /><br />
+          Spe
+        </div>
+      </div>
+
+      <!-- Conclusion ----------------------------------------- -->
+      <section id="conclusion">
+        <h2 class="lang-jp">まとめ</h2>
+        <h2 class="lang-en" style="display: none">Conclusion</h2>
+
+        <ol class="lang-jp">
+          <li>Common Corruptionにおける各種ノイズ評価テストにて脆弱性が存在することを示した</li>
+          <li>データ拡張訓練により，ロバスト性が向上することを示した</li>
+        </ol>
+        <ol class="lang-en" style="display: none">
+          <li>Confirmed vulnerabilities under various noise tests in Common Corruption</li>
+          <li>Demonstrated robustness improvements via noise‑based data augmentation</li>
+        </ol>
+      </section>
+    </main>
+
+    <!-- ─── Footer ─────────────────────────────────────────── -->
+    <footer>© 2024 JSAI2024</footer>
+  </body>
 </html>
