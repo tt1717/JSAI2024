@@ -10,32 +10,60 @@ https://sites.google.com/view/jsai2024-japanese/%E3%83%9B%E3%83%BC%E3%83%A0
 
 ## 動作確認環境
 
-- OS: [使用したOS（例：Ubuntu 20.04, Windows 10など）]
-- プログラミング言語: [使用したプログラミング言語とそのバージョン（例：Python 3.8）]
+- OS: Ubuntu 20.04, macOS
+- プログラミング言語: Python 3.8
 - ライブラリ・ツール:
-  - ライブラリ1 (バージョン)
-  - ライブラリ2 (バージョン)
-  - ツール1 (バージョン)
+  - PyTorch 1.9.0
+  - gym 0.21.0
+  - atari-py 0.2.9
+  - numpy 1.21.0
+  - pandas 1.3.0
+  - matplotlib 3.4.0
 
 ## インストール方法
 
 1. リポジトリをクローンします：
    ```bash
-   git clone https://github.com/ユーザー名/リポジトリ名.git
-   cd リポジトリ名
+   git clone https://github.com/tt1717/JSAI2024.git
+   cd JSAI2024
+   ```
 
-2. 必要なライブラリをインストールします：
+2. Conda環境を作成し、必要なライブラリをインストールします：
    ```bash
-   pip install -r requirements.txt
+   conda env create -f conda_env.yml
+   conda activate jsai2024
+   ```
 
-## 起動方法
-1. メインスクリプトを実行します：
-   python main.py
+## 使用方法
+
+1. データセットの作成：
+   ```bash
+   python create_dataset.py
+   ```
+
+2. 学習の実行：
+   ```bash
+   python run_dt_atari.py
+   ```
+
+3. 特定のゲームでの学習実行：
+   ```bash
+   ./run_dt_noiserate_seaquest.sh
+   ```
+
+## プロジェクト構造
+
+- `run_dt_atari.py`: メインの学習スクリプト
+- `create_dataset.py`: データセット作成スクリプト
+- `fixed_replay_buffer.py`: リプレイバッファの実装
+- `mingpt/`: GPTモデルの実装
+- `conda_env.yml`: 環境設定ファイル
 
 ## ベースコード
+
+このプロジェクトは以下のリポジトリをベースにしています：
 https://github.com/kzl/decision-transformer
 
-## 使用ライブラリ
+## ライセンス
 
-- ライブラリ1 (バージョン)
-- ライブラリ2 (バージョン)
+このプロジェクトはMITライセンスの下で公開されています。
