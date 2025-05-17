@@ -121,7 +121,7 @@ footer{
 <!-- ─── ヘッダー ─────────────────────────────────── -->
 <header>
     <!-- ロゴ画像は適宜差し替えてください -->
-    <img src="placeholder-logo.png" alt="logo">
+    <img src="images/icon.png" alt="logo">
     <h1>JSAI2024 JAPANESE</h1>
 </header>
 
@@ -177,7 +177,7 @@ footer{
         </li>
     </ol>
     <div style="text-align:center; margin:24px 0;">
-      <img src="images/method.png" alt="提案手法図" style="max-width:100%; height:auto;">
+      <img src="images/method.pdf" alt="提案手法図" style="max-width:100%; height:auto;">
     </div>
 </section>
 
@@ -188,19 +188,19 @@ footer{
     <p>Clean 以外のノイズ系テストでは，エージェントが学習しきれていない．</p>
     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:24px 0;">
       <div style="text-align:center;">
-        <img src="images/clean.gif" alt="Clean" style="width:120px; max-width:100%;"><br>Clean
+        <img src="images/clean_clean.gif" alt="Clean" style="width:120px; max-width:100%;"><br>Clean
       </div>
       <div style="text-align:center;">
-        <img src="images/gaus.gif" alt="Gaus" style="width:120px; max-width:100%;"><br>Gaus
+        <img src="images/clean_gaus.gif" alt="Gaus" style="width:120px; max-width:100%;"><br>Gaus
       </div>
       <div style="text-align:center;">
-        <img src="images/shot.gif" alt="Shot" style="width:120px; max-width:100%;"><br>Shot
+        <img src="images/clean_shot.gif" alt="Shot" style="width:120px; max-width:100%;"><br>Shot
       </div>
       <div style="text-align:center;">
-        <img src="images/imp.gif" alt="Imp" style="width:120px; max-width:100%;"><br>Imp
+        <img src="images/clean_imp.gif" alt="Imp" style="width:120px; max-width:100%;"><br>Imp
       </div>
       <div style="text-align:center;">
-        <img src="images/spe.gif" alt="Spe" style="width:120px; max-width:100%;"><br>Spe
+        <img src="images/clean_spe.gif" alt="Spe" style="width:120px; max-width:100%;"><br>Spe
       </div>
     </div>
 
@@ -209,7 +209,10 @@ footer{
         <li>通常データ訓練モデルに各種ノイズを付与するとゲームスコアが大幅に低下（ノイズに対して脆弱）</li>
         <li>スコア分布も大きく悪化</li>
     </ul>
-    <div class="placeholder">［脆弱性 定量 グラフ Placeholder］</div>
+    <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin:24px 0;">
+      <img src="images/vulnerable.png" alt="脆弱性定量評価1" style="max-width:45%; height:auto;">
+      <img src="images/vulnerable2.png" alt="脆弱性定量評価2" style="max-width:45%; height:auto;">
+    </div>
 </section>
 
 <!-- 実験結果：ロバスト性検証 -->
@@ -219,7 +222,23 @@ footer{
         <li>各訓練データセットに対応するテストで良好なスコアを獲得</li>
         <li>Clean 以外のノイズテストでも学習が確認できる</li>
     </ul>
-    <div class="placeholder">［ロバスト性 定性 画像 Placeholder］</div>
+    <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:24px 0;">
+      <div style="text-align:center;">
+        <img src="images/clean_clean.gif" alt="Clean" style="width:120px; max-width:100%;"><br>Clean
+      </div>
+      <div style="text-align:center;">
+        <img src="images/gaus100_gaus.gif" alt="Gaus" style="width:120px; max-width:100%;"><br>Gaus
+      </div>
+      <div style="text-align:center;">
+        <img src="images/shot100_shot.gif" alt="Shot" style="width:120px; max-width:100%;"><br>Shot
+      </div>
+      <div style="text-align:center;">
+        <img src="images/imp100_imp.gif" alt="Imp" style="width:120px; max-width:100%;"><br>Imp
+      </div>
+      <div style="text-align:center;">
+        <img src="images/spe100_spe.gif" alt="Spe" style="width:120px; max-width:100%;"><br>Spe
+      </div>
+    </div>
 
     <h3>ロバスト性検証（定量評価）</h3>
     <ul>
@@ -227,7 +246,10 @@ footer{
         <li>他ゲームタスクでもノイズデータセット訓練でスコア向上傾向</li>
         <li>通常訓練と比較してスコア分布が全体的に向上</li>
     </ul>
-    <div class="placeholder">［ロバスト性 定量 表・グラフ Placeholder］</div>
+    <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap; margin:24px 0;">
+      <img src="images/robustness.png" alt="ロバスト性定量評価1" style="max-width:45%; height:auto;">
+      <img src="images/robustness2.png" alt="ロバスト性定量評価2" style="max-width:45%; height:auto;">
+    </div>
 </section>
 
 <!-- まとめ -->
